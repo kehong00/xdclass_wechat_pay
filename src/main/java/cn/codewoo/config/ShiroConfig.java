@@ -58,8 +58,8 @@ public class ShiroConfig {
         filterChain.put("/swagger-resources/**","anon");
         filterChain.put("/v2/**","anon");
         filterChain.put("/swagger-ui.html/**","anon");
-        filterChain.put("/api/put/**","anon");
         filterChain.put("/**","anon");
+        filterChain.put("/api/put/**","anon");
         filterChain.put("/api/authc/**","token");
         bean.setFilterChainDefinitionMap(filterChain);
         return bean;

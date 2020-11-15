@@ -17,3 +17,10 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
+wxpay:
+  appid: wx025575eac69a2d5b
+  appsecret: f5b6730c592ac15b8b1a5aeb8948a9f3
+wxopen:
+  appid: wxu43ykka27h78m2ig
+  appsecret: p3336mt274i0z0i85050i85c286p8847
+  redirect_url: http://16webtest.ngrok.xiaomiqiu.cn

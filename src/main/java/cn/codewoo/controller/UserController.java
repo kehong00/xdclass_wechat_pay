@@ -1,8 +1,10 @@
 package cn.codewoo.controller;
 
+import cn.codewoo.config.WeChatConfig;
 import cn.codewoo.utils.DataResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,9 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/")
 @RestController
 public class UserController {
+    @Autowired
+    private WeChatConfig weChatConfig;
     @GetMapping("/pub")
     @ApiOperation("测试接口")
     public DataResult login(){
-        return DataResult.success();
+        return DataResult.success(weChatConfig.getAppId());
     }
 }
