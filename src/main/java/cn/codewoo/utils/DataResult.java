@@ -1,11 +1,13 @@
 package cn.codewoo.utils;
 
 
+import java.io.Serializable;
+
 /**
  * @author kehong
  * 统一返回数据格式封装类
  */
-public class DataResult {
+public class DataResult implements Serializable {
     /**
      * 响应码
      */

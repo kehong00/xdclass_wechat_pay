@@ -1,0 +1,19 @@
+swagger:
+  enable: true
+spring:
+  application:
+    name: wechat-pay
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: jdbc:mysql://42.194.140.230:3306/xdclass?useUnicode=true&characterEncodin=UTF-8&useSSL=false
+      username: root
+      password: Kehong0028..
+      max-active: 200
+      max-wait: 60000
+      min-idle: 10
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true

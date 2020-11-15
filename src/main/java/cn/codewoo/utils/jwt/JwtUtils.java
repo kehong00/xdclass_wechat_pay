@@ -50,7 +50,7 @@ public class JwtUtils {
      */
     public static Claims checkJWT(String token){
         try{
-            final Claims claims = Jwts.parser().setSigningKey(appSecret).parseClaimsJws(token).getBody();
+            Claims claims = Jwts.parser().setSigningKey(appSecret).parseClaimsJws(token).getBody();
             return claims;
         }catch (Exception e){
             return null;
