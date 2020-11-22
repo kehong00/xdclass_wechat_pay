@@ -1,6 +1,13 @@
 swagger:
   enable: true
 spring:
+  redis:
+    host: 42.194.140.230
+    jedis:
+      pool:
+        max-wait: 10
+        max-active: 20
+        min-idle: 5
   application:
     name: wechat-pay
   datasource:
@@ -18,9 +25,30 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
 wxpay:
-  appid: wx025575eac69a2d5b
-  appsecret: f5b6730c592ac15b8b1a5aeb8948a9f3
+  appid: wxu43ykka27h78m2ig
+  appsecret: p3336mt274i0z0i85050i85c286p8847
+  mer_id: 4606516237
+  key: 985I3X1uh6588n21Y1JZg03t0p18MV28
+  callback: http://kt86j7.natappfree.cc/api/pub/wechat/order/callback
+
 wxopen:
   appid: wxu43ykka27h78m2ig
   appsecret: p3336mt274i0z0i85050i85c286p8847
   redirect_url: http://16webtest.ngrok.xiaomiqiu.cn
+
+alipay:
+  # 沙箱网关
+  alipayGateway: https://openapi.alipaydev.com/gateway.do
+  # 沙箱appId
+  appId: 2016110200785252
+  appPrivateKey: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCbikOeCkJMpgHbNrOvS/sd1PmwyuLNe21Rspx/0mijGOLCcp6Fh7w5rAHJbE94i0LPEGNWcWLGE4+x43sszbPDjVTZyjEs0gUuXy8YdDqyJEB5Ou6OK7h+B3oSwGF2skoqUJE0MXMzubuhs1mnZwR6oldo1+/7lytdvOjyff87iGiyIZXKwC871nL3TcBGo2nXMDy2uRcDXxUhd8L7fbtTGluXfpxmCO1Jf5GE7+QzJWa5F8Rjqgt62YpGAmQd1W/RCQSk4R1+aEXvKDc3p4RtvX969S/ygJrpgdduGQISannj8glOaHAo2IqX2YLO3qSWG+EQbFeYk93RTL6hnxgpAgMBAAECggEAeVEdrm4YCkrNVdtTyV29LyaH3qJQxq8HtFpZAMXvwY7Oh5X5GPOnF2CXQDEPx1jvsiv5H1pvDUoCoWBqGacUGGnrDbhMJMZnLiUlybAWfA4Uj7osiY2GaB6S039kRb2IZXrT1t7fGTA8LkKCojSS5Mgs32TWFOly9Lk9BK7L3fUtHE1pHv6ULf2rT7hdLQCU/FrUGiT3x0Ob7oYS8vT6gnIXdEujjsp2RXXl1xnlhVKFHsTrfn0XX06VBtD0pK0ZWX/ZiNr8fJ7ptsZLvJOYFMHtaDgliutKldJecxaX0DcgMGQFBmSzDGv8uZdZ9Xxy60ai1YtOfsKI1zbrxYKaUQKBgQDg0CPYKhHmLhX0CVtPR4WkyskAdh6SvtreFZd+busX/x4UGzfsm10uJSbMgwarPB0SxBPSAFht8WpAUIabcJ4cAUQjssH0oM/N5ReV3cAqbatibgx45hRsHM+IU54M3lHfleT0RfANzRDOiZuE9lGUXkiQdMJQGV/MVo8gOfBBPQKBgQCxHgLIIz50BUEArECNtM1RwcIYahXhzZjEcegLArwWfh2iQXNGUtTeNS2ePA/Fm1vUw7NFDMfVLNCXCCitR2/6pikds2R108w2CzyfwRWWljQ/fEq1x/jyz9EaQWc3YHF8HQVEdTkRwdsClkrVq+044qeUE5fHjYqe3rLtL4FJXQKBgQC7czGAC0wTZnftnGOjThqUFnXUyaiiaTrrlItV47xorNLypuNRiRX/5QBd5B6KZrxDKnTwVFNnkLUsXThvoU5kQXYEYgexJuk+X3f0AQs7FWii0OnbYNTEdJ1iqX4Ocs1HpZ9bQnlvuH38COdAzXWmRZsxv/lJem7TXZVHpKe8bQKBgE3a604eb+2AAbrR/O5Nc5NkoHUq7MN9JJH1oBJ2+UbJ2SzhqFJZRskGhy7vJ9+tEwjLnZnUrGLAeFBrfbXtmQOM1rX/jUFeAH4hIlz2+w5eqEjf0ddmN8BEKZ5o8X4eHsR33UDiZluv4x2YAv05veUrfI5Srn1BcpWzPuOT5jjhAoGBANGHGvLeLg3xBhIBQemqAi4RaQ+Hst2eFgLhKythVZgb3tUukQ73sKwS1TjmzvDLyFOyMNqRX44a/00ERqQrY7Rj33rq/rtIdddkSjrTynqDrocFGrgIZitDO/xVfaGF0gyjboUCcel4TsVDDcbcz6fRo8flSXkkI0x8bnKaM05G
+  appPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm4pDngpCTKYB2zazr0v7HdT5sMrizXttUbKcf9JooxjiwnKehYe8OawByWxPeItCzxBjVnFixhOPseN7LM2zw41U2coxLNIFLl8vGHQ6siRAeTrujiu4fgd6EsBhdrJKKlCRNDFzM7m7obNZp2cEeqJXaNfv+5crXbzo8n3/O4hosiGVysAvO9Zy903ARqNp1zA8trkXA18VIXfC+327Uxpbl36cZgjtSX+RhO/kMyVmuRfEY6oLetmKRgJkHdVv0QkEpOEdfmhF7yg3N6eEbb1/evUv8oCa6YHXbhkCEmp54/IJTmhwKNiKl9mCzt6klhvhEGxXmJPd0Uy+oZ8YKQIDAQAB
+  alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhPTHo+1OY/xCDIGvyVKQkQsPXt+FDe2BJ6RWUxV9bYC5xH9JQgxAJXNWgzxCwPWraidF797b9Kc3jDaKf+yEb90mAkGqq9YK/NEprctiqNjUL09RvTIpmLbYpMYHA8en8b7/BJ+96tMrgW4wC3Mo4bYybX9CHxtqE4lVWDIXtGJ7jeEsFPIpVuN7BgQKIrPHZZikntfcWQLgNbBHAscNKA5Igf8mEQffKbL1KU7YdqUKof2RUyvDs5D+xmLoDlmBmLcBiTktu0dLc5r8FEjEX8spTE2GB/NgeBwwsfbPCZdKGKrsXyAQaV/k4HTReKAjK5KE9xdbwAcxpDFnDdGaRwIDAQAB
+  qrurl: https://openauth.alipaydev.com/oauth2/publicAppAuthorize.htm?app_id=%s&scope=auth_user&redirect_uri=%s
+  redirect_url: http://localhost:8081/api/pub/user_callback
+server:
+  port: 8081
+jwt:
+  subject: kehong
+  expire: PT24H
+  appSecret: Kehong0028aaabbbCCCaaddddavddfdsgFd==jifdjfdsIJOIFVdffudiJIOjgfdfadq1

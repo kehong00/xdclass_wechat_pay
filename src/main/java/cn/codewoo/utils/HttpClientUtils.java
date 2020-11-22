@@ -29,67 +29,92 @@ import java.util.Map;
  * @Version 1.0
  **/
 public class HttpClientUtils {
-    private static final Gson gson = new Gson();
-    private static final Logger logger = LoggerFactory.getLogger(HttpClientUtils.class);
+    private static  final Gson gson = new Gson();
 
     /**
-     * 发送get请求
-     * @param url 请求地址
-     * @param timeout 请求超时时间
-     * @return 响应
+     * get方法
+     * @param url
+     * @return
      */
-    public static Map<String, Object> doGet(String url, int timeout){
-        Map<String, Object> map = new HashMap<>();
-        HttpClient httpClient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet(url);
-        RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(timeout)
-                .setConnectTimeout(timeout)
-                .setRedirectsEnabled(true)
+    public static Map<String,Object> doGet(String url){
+
+        Map<String,Object> map = new HashMap<>();
+        CloseableHttpClient httpClient =  HttpClients.createDefault();
+
+        RequestConfig requestConfig =  RequestConfig.custom().setConnectTimeout(5000) //连接超时
+                .setConnectionRequestTimeout(5000)//请求超时
+                .setSocketTimeout(5000)
+                .setRedirectsEnabled(true)  //允许自动重定向
                 .build();
+
+        HttpGet httpGet = new HttpGet(url);
         httpGet.setConfig(requestConfig);
+
         try{
-            HttpResponse response = httpClient.execute(httpGet);
-            //判断请求状态码是否为200
-            if (response.getStatusLine().getStatusCode() == 200){
-                HttpEntity entity = response.getEntity();
-                String entityString = EntityUtils.toString(entity);
-                map = gson.fromJson(entityString, map.getClass());
+            HttpResponse httpResponse = httpClient.execute(httpGet);
+            if(httpResponse.getStatusLine().getStatusCode() == 200){
+
+                String jsonResult = EntityUtils.toString( httpResponse.getEntity());
+                map = gson.fromJson(jsonResult,map.getClass());
             }
+
         }catch (Exception e){
-            logger.error("get请求失败",e);
+            e.printStackTrace();
+        }finally {
+            try {
+                httpClient.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
         return map;
     }
 
+
     /**
-     * 发送post请求
-     * @param url 请求地址
-     * @param data 请求数据
-     * @param timeout 超时时长
-     * @return 响应数据
+     * 封装post
+     * @return
      */
-    public static String doPost(String url, String data, int timeout){
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost();
-        RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(timeout)
-                .setConnectTimeout(timeout)
+    public static String doPost(String url, String data,int timeout){
+        CloseableHttpClient httpClient =  HttpClients.createDefault();
+        //超时设置
+
+        RequestConfig requestConfig =  RequestConfig.custom().setConnectTimeout(timeout)
+                .setConnectionRequestTimeout(timeout)
+                .setSocketTimeout(timeout)
                 .setRedirectsEnabled(true)
                 .build();
+
+
+        HttpPost httpPost  = new HttpPost(url);
         httpPost.setConfig(requestConfig);
-        httpPost.setHeader("Content-Type", MediaType.TEXT_HTML_VALUE);
-        if (Strings.isEmpty(data) && data instanceof String){
-            StringEntity entity = new StringEntity(data, "utf8");
-            httpPost.setEntity(entity);
+        httpPost.addHeader("Content-Type","text/html; chartset=UTF-8");
+
+        if(data != null && data instanceof  String){
+            StringEntity stringEntity = new StringEntity(data,"UTF-8");
+            httpPost.setEntity(stringEntity);
         }
+
         try{
-            CloseableHttpResponse response = httpClient.execute(httpPost);
-            if (response.getStatusLine().getStatusCode() == 200){
-                String result = EntityUtils.toString(response.getEntity());
+
+            CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
+            HttpEntity httpEntity = httpResponse.getEntity();
+            if(httpResponse.getStatusLine().getStatusCode() == 200){
+                String result = EntityUtils.toString(httpEntity);
                 return result;
             }
+
         }catch (Exception e){
-            logger.error("post请求失败：",e);
+            e.printStackTrace();
+        }finally {
+            try{
+                httpClient.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
+
         return null;
+
     }
 }

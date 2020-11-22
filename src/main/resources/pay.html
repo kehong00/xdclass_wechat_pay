@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form name="punchout_form" method="post"
+      action="https://openapi.alipaydev.com/gateway.do?charset=GBK&method=alipay.trade.page.pay&sign=gPVX3UWBxbA8srsRjhD1SoCv9ju8WBBFMu89j91mzISRHghYBT%2FBe5USXvM8Q3bxQVC7trDEMANRvCNrYrzxnspO7fcGonvocaPHa18cqp9S%2B5DynPlxc%2BkXhBU9Qb6F8q0FdRIMtfBY7tieuzi99Zn0%2Ffb9HlTL4yOajxRNwcxYObdXjH47fhNDcm1s%2BOMcDOFTSG5sJ6TXj2Rj4kugTuQDSS5xISfq%2BQy%2Fdehka8E1i64USy0LC7Tc%2BO2TvikFSmuPw19Psaz4%2Bh7Vvxy%2F%2FnkPSrmDNcFezY%2B5vZLehGpXYKJecrYmcvgbV2fbRx9n4uTfSCAJZ4uR4pUOcMVr%2FQ%3D%3D&return_url=http%3A%2F%2Flocalhost%3A8081%2FCallBack%2Freturn_url.jsp&notify_url=http%3A%2F%2Flocalhost%3A8081%2FCallBack%2Fnotify_url.jsp&version=1.0&app_id=2016110200785252&sign_type=RSA2&timestamp=2020-11-16+21%3A17%3A04&alipay_sdk=alipay-sdk-java-dynamicVersionNo&format=json">
+    <input type="hidden" name="biz_content" value="{&quot;body&quot;:&quot;test&quot;,&quot;outTradeNo&quot;:&quot;e2d5cffb55374367bc81de90642a3175&quot;,&quot;productCode&quot;:&quot;FAST_INSTANT_TRADE_PAY&quot;,&quot;subject&quot;:&quot;test&quot;,&quot;totalAmount&quot;:22.2}">
+    <input type="submit" value="????" style="display:none" >
+</form>
+<script>
+    document.forms[0].submit();
+</script>
+
+</body>
+</html>

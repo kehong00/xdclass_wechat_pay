@@ -10,6 +10,9 @@ public enum BaseRespCode implements IBaseRespCode{
     SUCCESS(20000,"操作成功"),
     ERROR(40000,"操作失败"),
     AUTHENTICATION_ERROR(400001, "认证失败，请重新登录"),
+    TOKEN_NOT_NULL(40004,"请登录后再操作"),
+    TOKEN_ERROR(40005,"登录失效，请重新登录"),
+    ALIPAY_OPEN_AUTH_TOKEN_ERROR(40002,"支付宝登录失败"),
     SYS_ERROR(50000,"系统错误")
     ;
 

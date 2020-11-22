@@ -14,6 +14,10 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource(value = "classpath:application.yml")
 public class WeChatConfig {
+    private final String OPEN_QRCODE_URL= "https://open.weixin.qq.com/connect/qrconnect?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_login&state=%s#wechat_redirect";
+
+    private final String unifiedOrderUrl = "https://api.xdclass.net/pay/unifiedorder";
+
     @Value("${wxpay.appid}")
     private String appId;
     @Value("${wxpay.appsecret}")
@@ -26,8 +30,12 @@ public class WeChatConfig {
     @Value("${wxopen.redirect_url}")
     private String openRedirectUrl;
 
-    private final String OPEN_QRCODE_URL= "https://open.weixin.qq.com/connect/qrconnect?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_login&state=%s#wechat_redirect";
-
+    @Value("${wxpay.mer_id}")
+    private String mchId;
+    @Value("${wxpay.key}")
+    private String key;
+    @Value("${wxpay.callback}")
+    private String callbackUrl;
 
     public String getAppId() {
         return appId;
@@ -71,5 +79,33 @@ public class WeChatConfig {
 
     public String getOPEN_QRCODE_URL() {
         return OPEN_QRCODE_URL;
+    }
+
+    public String getMchId() {
+        return mchId;
+    }
+
+    public void setMchId(String mchId) {
+        this.mchId = mchId;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getCallbackUrl() {
+        return callbackUrl;
+    }
+
+    public void setCallbackUrl(String callbackUrl) {
+        this.callbackUrl = callbackUrl;
+    }
+
+    public String getUnifiedOrderUrl() {
+        return unifiedOrderUrl;
     }
 }

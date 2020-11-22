@@ -4,10 +4,15 @@ import cn.codewoo.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
+import javax.crypto.SecretKey;
+import java.security.Key;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
+
 
 /**
  * @author kehong
@@ -28,10 +33,13 @@ public class JwtUtils {
      * @return String 签发的token
      */
     public static String geneJsonWebToken(User user){
-        Jwts.claims();
         if (user == null || user.getId() == null){
             return null;
         }
+
+        byte[] decode = Decoders.BASE64.decode(appSecret);
+        SecretKey key = Keys.hmacShaKeyFor(decode);
+
         String token = Jwts.builder()
                 .setSubject(subject)
                 .claim("id", user.getId())
@@ -39,7 +47,7 @@ public class JwtUtils {
                 .claim("img", user.getHeadImg())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expire.toMillis()))
-                .signWith(SignatureAlgorithm.HS256, Base64.getEncoder().encodeToString(appSecret.getBytes())).compact();
+                .signWith(key).compact();
         return token;
     }
 
@@ -50,7 +58,7 @@ public class JwtUtils {
      */
     public static Claims checkJWT(String token){
         try{
-            Claims claims = Jwts.parser().setSigningKey(appSecret).parseClaimsJws(token).getBody();
+            Claims claims = Jwts.parserBuilder().setSigningKey(appSecret).build().parseClaimsJws(token).getBody();
             return claims;
         }catch (Exception e){
             return null;
