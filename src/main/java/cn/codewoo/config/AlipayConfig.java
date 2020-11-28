@@ -29,6 +29,12 @@ public class AlipayConfig {
     @Value("${alipay.redirect_url}")
     private String redirectUrl;
 
+    @Value("${notify_url}")
+    private String notify_url;
+
+    @Value("${pay_return_url}")
+    private String pay_return_url;
+
 
     public String getAlipayGateway() {
         return alipayGateway;
@@ -85,5 +91,21 @@ public class AlipayConfig {
 
     public void setRedirectUrl(String redirectUrl) {
         this.redirectUrl = redirectUrl;
+    }
+
+    public String getNotify_url() {
+        return notify_url;
+    }
+
+    public void setNotify_url(String notify_url) {
+        this.notify_url = notify_url;
+    }
+
+    public String getPay_return_url() {
+        return pay_return_url;
+    }
+
+    public void setPay_return_url(String pay_return_url) {
+        this.pay_return_url = pay_return_url;
     }
 }

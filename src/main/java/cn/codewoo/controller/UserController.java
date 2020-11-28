@@ -1,16 +1,23 @@
 package cn.codewoo.controller;
 
 import cn.codewoo.config.WeChatConfig;
+import cn.codewoo.constant.Constants;
 import cn.codewoo.entity.User;
+import cn.codewoo.exception.CustomException;
 import cn.codewoo.mapper.UserMapper;
+import cn.codewoo.utils.BaseRespCode;
 import cn.codewoo.utils.DataResult;
+import cn.codewoo.utils.jwt.JwtUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @ClassName UserController
@@ -37,5 +44,15 @@ public class UserController {
     public DataResult getUserById(@RequestParam(name = "id") Integer id){
         User user = userMapper.selectByPrimaryKey(id);
         return DataResult.success(user);
+    }
+
+    @GetMapping("/auth/userinfo")
+    public DataResult getUserInfo(HttpServletRequest request){
+        String token = request.getHeader(Constants.AUTHENTICATION);
+        if (Strings.isEmpty(token)){
+            throw new CustomException(BaseRespCode.TOKEN_NOT_NULL);
+        }
+        JwtUtils.checkJWT(token).get("id");
+        return null;
     }
 }

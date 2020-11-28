@@ -1,12 +1,15 @@
 package cn.codewoo.controller;
 
 import cn.codewoo.config.AlipayConfig;
+import cn.codewoo.constant.Constants;
 import cn.codewoo.dto.OrderSaveDTO;
 import cn.codewoo.entity.User;
+import cn.codewoo.entity.Video;
 import cn.codewoo.entity.VideoOrder;
 import cn.codewoo.exception.CustomException;
 import cn.codewoo.service.IUserService;
 import cn.codewoo.service.IVideoOrderService;
+import cn.codewoo.service.IVideoService;
 import cn.codewoo.utils.AlipayUtils;
 import cn.codewoo.utils.BaseRespCode;
 import cn.codewoo.utils.DataResult;
@@ -15,26 +18,28 @@ import cn.codewoo.vo.req.AlipayPayReqVO;
 import com.alibaba.fastjson.JSON;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
-import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipaySystemOauthTokenRequest;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.response.AlipaySystemOauthTokenResponse;
+import com.alipay.api.response.AlipayTradePagePayResponse;
+import io.jsonwebtoken.Claims;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.*;
-
-import static com.alipay.api.AlipayConstants.CHARSET;
 
 /**
  * @ClassName AlipayController
@@ -58,6 +63,9 @@ public class AlipayController {
 
     @Autowired
     private IVideoOrderService videoOrderService;
+
+    @Autowired
+    private IVideoService videoService;
 
 
     @GetMapping("/pub/alipay/login_qrurl")
@@ -92,9 +100,10 @@ public class AlipayController {
                 throw new CustomException(BaseRespCode.ALIPAY_OPEN_AUTH_TOKEN_ERROR);
             }
             String jwtToken = JwtUtils.geneJsonWebToken(user);
-//            response.sendRedirect("http://localhost:8081/api/auth/test" + "token=" + jwtToken);
+            logger.info("生成的token：" + jwtToken);
+            response.sendRedirect("http://localhost:9003/#/token" + "?token=" + jwtToken);
             return DataResult.success(jwtToken);
-        } catch (AlipayApiException e) {
+        } catch (AlipayApiException | IOException e) {
             //处理异常
             e.printStackTrace();
             return null;
@@ -102,6 +111,40 @@ public class AlipayController {
     }
 
     @GetMapping("/pub/alipay/pay")
+    public void alipayPay(HttpServletRequest request, HttpServletResponse response, @RequestParam("video_id") Integer videoId) throws IOException {
+//        String token = request.getHeader(Constants.AUTHENTICATION);
+        String token = "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJrZWhvbmciLCJpZCI6MywibmFtZSI6IueMquWktOeariIsImltZyI6Imh0dHBzOi8vdGZzLmFsaXBheS5uZXQvaW1hZ2VzL3BhcnRuZXIvVEIxc0FiZFhoVTV4ZTVKdmZHZVhYWFR1cFhhIiwiaWF0IjoxNjA2NTMyNjU3LCJleHAiOjE2MDY2MTkwNTd9.-A26FPCD_OFoDWZsUexD9-btJ1rTYmvBLXhLbYSKiqsUs5PAymd5WLNKDJbXsxnc";
+        Claims claims = JwtUtils.checkJWT(token);
+
+        int id = (int)claims.get("id");
+
+        AlipayPayReqVO alipayPayReqVO = videoOrderService.saveAlipay(videoId, id);
+
+
+        AlipayClient alipayClient = alipayUtils.getAlipayClient();
+        AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
+        //支付成功同步回调地址
+        alipayRequest.setReturnUrl(alipayConfig.getPay_return_url());
+        //支付宝异步通知接口
+        alipayRequest.setNotifyUrl(alipayConfig.getNotify_url());
+
+
+        String jsonString = JSON.toJSONString(alipayPayReqVO);
+
+        alipayRequest.setBizContent(jsonString);
+        String form = "";
+        try {
+            form = alipayClient.pageExecute(alipayRequest).getBody();  //调用SDK生成表单
+        } catch (AlipayApiException e) {
+            e.printStackTrace();
+        }
+        response.setContentType(MediaType.TEXT_HTML_VALUE);
+        response.getWriter().write(form); //直接将完整的表单html输出到页面
+        response.getWriter().flush();
+        response.getWriter().close();
+    }
+
+    /*@GetMapping("/pub/alipay/pay")
     public DataResult alipayPay(HttpServletRequest request, HttpServletResponse response, @RequestParam("video_id") Integer videoId) throws IOException {
         AlipayPayReqVO vo = new AlipayPayReqVO();
         vo.setBody("test");
@@ -130,7 +173,7 @@ public class AlipayController {
 
         String jsonString = JSON.toJSONString(vo);
 
-        /*alipayRequest.setBizContent( "{"  +
+        *//*alipayRequest.setBizContent( "{"  +
                 "    \"out_trade_no\":\"20153420020101001\","  +
                 "    \"product_code\":\"FAST_INSTANT_TRADE_PAY\","  +
                 "    \"total_amount\":7599,"  +
@@ -140,7 +183,7 @@ public class AlipayController {
                 "    \"extend_params\":{"  +
                 "    \"sys_service_provider_id\":\"2088213833607846\""  +
                 "    }" +
-                "  }" );*/
+                "  }" );*//*
         alipayRequest.setBizContent(jsonString);
         String form = "";
         try {
@@ -153,15 +196,18 @@ public class AlipayController {
         response.getWriter().flush();
         response.getWriter().close();
         return null;
-    }
+    }*/
 
 
-    @RequestMapping("/pub/alipay/pay_callback")
+
+
+
+    @RequestMapping("/pub/alipay/notify_callback")
     @ResponseBody
     /**
      * 接收支付宝异步通知的接口，处理订单支付状态
      */
-    public DataResult alipayPayCallback(HttpServletRequest request, HttpServletResponse response) throws AlipayApiException, IOException {
+    public void queryAlipayTradeState(HttpServletRequest request, HttpServletResponse response) throws AlipayApiException, IOException {
         SortedMap<String,String> map = new TreeMap<>();
         Map<String, String[]> parameterMap = request.getParameterMap();
         Set<Map.Entry<String, String[]>> entries = parameterMap.entrySet();
@@ -198,7 +244,8 @@ public class AlipayController {
             if (videoOrder != null){
                 //订单有效
                 Integer totalFee = videoOrder.getTotalFee();
-                int total_amount = (int) (Double.valueOf(map.get("total_amount")) * 100);
+                double total_amount1 = Float.valueOf(map.get("total_amount")) * 100;
+                int total_amount = (int) (Float.valueOf(map.get("total_amount")) * 100);
 
                 String appId = map.get("app_id");
 
@@ -212,27 +259,91 @@ public class AlipayController {
                         //订单支付成功
                         videoOrder.setNotifyTime(new Date());
                         videoOrder.setState(1);
-                        videoOrderService.update(videoOrder);
+                        int rows = videoOrderService.update(videoOrder);
                     }else if ("TRADE_FINISHED".equals(trade_status)){
                         videoOrder.setNotifyTime(new Date());
                         videoOrder.setState(1);
-                        videoOrderService.update(videoOrder);
+                        int rows = videoOrderService.update(videoOrder);
                     }
                     response.getWriter().print("success");
-                }else{
-                    return DataResult.error();
                 }
-            }else{
-                return DataResult.error("订单错误");
             }
         }
-        return DataResult.error("支付失败 ");
     }
 
-    @GetMapping("pub/alipay/redirect")
+    @GetMapping("/pub/alipay/query_trade_state")
     @ResponseBody
-    public DataResult alipayPayRedicet(){
-        return DataResult.success();
+    public DataResult alipayPayRedirect(HttpServletRequest request,@RequestParam String json){
+        try {
+            /*Map<String, String[]> parameterMap = request.getParameterMap();
+            Set<Map.Entry<String, String[]>> entries = parameterMap.entrySet();
+            Iterator<Map.Entry<String, String[]>> iterator = entries.iterator();
+            SortedMap sortedMap = new TreeMap();
+            while (iterator.hasNext()){
+                Map.Entry<String, String[]> next = iterator.next();
+                String key = next.getKey();
+                String[] value = next.getValue();
+                sortedMap.put(key,value);
+            }
+
+            String jsonString = JSON.toJSONString(sortedMap);*/
+
+            logger.info("接收到的json: " + json);
+            String decode = URLDecoder.decode(json, "UTF-8");
+            logger.info("decode url : " + decode);
+
+            AlipayClient alipayClient = alipayUtils.getAlipayClient();
+            AlipayTradePagePayRequest tradeReq = new AlipayTradePagePayRequest();
+//            tradeReq.setBizContent(jsonString);
+            tradeReq.setBizContent(decode);
+            AlipayTradePagePayResponse response = alipayClient.pageExecute(tradeReq);
+            if (response.isSuccess()){
+                return DataResult.success();
+            }else {
+                return DataResult.error();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException(BaseRespCode.SYS_ERROR);
+        }
+
+    }
+
+    @ApiOperation("重新支付接口")
+    @GetMapping("/auth/alipay/repay")
+    public void rePay(@RequestParam String out_trade_no, HttpServletResponse response){
+        VideoOrder videoOrder = videoOrderService.selectOrderByOutTradeNo(out_trade_no);
+        if (videoOrder == null){
+            throw new CustomException(BaseRespCode.OUT_TRADE_NO_NOT_FOUND);
+        }
+
+        AlipayClient alipayClient = alipayUtils.getAlipayClient();
+        AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
+        //支付成功同步回调地址
+        alipayRequest.setReturnUrl(alipayConfig.getPay_return_url());
+        //支付宝异步通知接口
+        alipayRequest.setNotifyUrl(alipayConfig.getNotify_url());
+
+        AlipayPayReqVO alipayPayReqVO = videoOrderService.generateAlipayPayReqVO(videoOrder);
+
+        String jsonString = JSON.toJSONString(alipayPayReqVO);
+
+        alipayRequest.setBizContent(jsonString);
+        String form = "";
+        try {
+            form = alipayClient.pageExecute(alipayRequest).getBody();  //调用SDK生成表单
+        } catch (AlipayApiException e) {
+            e.printStackTrace();
+        }
+        response.setContentType(MediaType.TEXT_HTML_VALUE);
+        try{
+            response.getWriter().write(form); //直接将完整的表单html输出到页面
+            response.getWriter().flush();
+            response.getWriter().close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -1,146 +1,273 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.codewoo.mapper.VideoMapper">
-  <resultMap id="BaseResultMap" type="cn.codewoo.entity.Video">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="summary" jdbcType="VARCHAR" property="summary" />
-    <result column="cover_img" jdbcType="VARCHAR" property="coverImg" />
-    <result column="view_num" jdbcType="INTEGER" property="viewNum" />
-    <result column="price" jdbcType="INTEGER" property="price" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="online" jdbcType="INTEGER" property="online" />
-    <result column="point" jdbcType="DOUBLE" property="point" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, title, summary, cover_img, view_num, price, create_time, `online`, point
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from video
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from video
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="cn.codewoo.entity.Video">
-    insert into video (id, title, summary, 
-      cover_img, view_num, price, 
-      create_time, `online`, point
-      )
-    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, 
-      #{coverImg,jdbcType=VARCHAR}, #{viewNum,jdbcType=INTEGER}, #{price,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{online,jdbcType=INTEGER}, #{point,jdbcType=DOUBLE}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="cn.codewoo.entity.Video">
-    insert into video
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="title != null">
-        title,
-      </if>
-      <if test="summary != null">
-        summary,
-      </if>
-      <if test="coverImg != null">
-        cover_img,
-      </if>
-      <if test="viewNum != null">
-        view_num,
-      </if>
-      <if test="price != null">
-        price,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="online != null">
-        `online`,
-      </if>
-      <if test="point != null">
-        point,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="title != null">
-        #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="summary != null">
-        #{summary,jdbcType=VARCHAR},
-      </if>
-      <if test="coverImg != null">
-        #{coverImg,jdbcType=VARCHAR},
-      </if>
-      <if test="viewNum != null">
-        #{viewNum,jdbcType=INTEGER},
-      </if>
-      <if test="price != null">
-        #{price,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="online != null">
-        #{online,jdbcType=INTEGER},
-      </if>
-      <if test="point != null">
-        #{point,jdbcType=DOUBLE},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.codewoo.entity.Video">
-    update video
-    <set>
-      <if test="title != null">
-        title = #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="summary != null">
-        summary = #{summary,jdbcType=VARCHAR},
-      </if>
-      <if test="coverImg != null">
-        cover_img = #{coverImg,jdbcType=VARCHAR},
-      </if>
-      <if test="viewNum != null">
-        view_num = #{viewNum,jdbcType=INTEGER},
-      </if>
-      <if test="price != null">
-        price = #{price,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="online != null">
-        `online` = #{online,jdbcType=INTEGER},
-      </if>
-      <if test="point != null">
-        point = #{point,jdbcType=DOUBLE},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="cn.codewoo.entity.Video">
-    update video
-    set title = #{title,jdbcType=VARCHAR},
-      summary = #{summary,jdbcType=VARCHAR},
-      cover_img = #{coverImg,jdbcType=VARCHAR},
-      view_num = #{viewNum,jdbcType=INTEGER},
-      price = #{price,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      `online` = #{online,jdbcType=INTEGER},
-      point = #{point,jdbcType=DOUBLE}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+    <resultMap id="BaseResultMap" type="cn.codewoo.entity.Video">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="summary" jdbcType="VARCHAR" property="summary"/>
+        <result column="cover_img" jdbcType="VARCHAR" property="coverImg"/>
+        <result column="view_num" jdbcType="INTEGER" property="viewNum"/>
+        <result column="price" jdbcType="INTEGER" property="price"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="online" jdbcType="INTEGER" property="online"/>
+        <result column="point" jdbcType="DOUBLE" property="point"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, title, summary, cover_img, view_num, price, create_time, `online`, point
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from video
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from video
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="cn.codewoo.entity.Video">
+        insert into video (id, title, summary,
+                           cover_img, view_num, price,
+                           create_time, `online`, point)
+        values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR},
+                #{coverImg,jdbcType=VARCHAR}, #{viewNum,jdbcType=INTEGER}, #{price,jdbcType=INTEGER},
+                #{createTime,jdbcType=TIMESTAMP}, #{online,jdbcType=INTEGER}, #{point,jdbcType=DOUBLE})
+    </insert>
+    <insert id="insertSelective" parameterType="cn.codewoo.entity.Video">
+        insert into video
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="summary != null">
+                summary,
+            </if>
+            <if test="coverImg != null">
+                cover_img,
+            </if>
+            <if test="viewNum != null">
+                view_num,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="online != null">
+                `online`,
+            </if>
+            <if test="point != null">
+                point,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="summary != null">
+                #{summary,jdbcType=VARCHAR},
+            </if>
+            <if test="coverImg != null">
+                #{coverImg,jdbcType=VARCHAR},
+            </if>
+            <if test="viewNum != null">
+                #{viewNum,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="online != null">
+                #{online,jdbcType=INTEGER},
+            </if>
+            <if test="point != null">
+                #{point,jdbcType=DOUBLE},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.codewoo.entity.Video">
+        update video
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="summary != null">
+                summary = #{summary,jdbcType=VARCHAR},
+            </if>
+            <if test="coverImg != null">
+                cover_img = #{coverImg,jdbcType=VARCHAR},
+            </if>
+            <if test="viewNum != null">
+                view_num = #{viewNum,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="online != null">
+                `online` = #{online,jdbcType=INTEGER},
+            </if>
+            <if test="point != null">
+                point = #{point,jdbcType=DOUBLE},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.codewoo.entity.Video">
+        update video
+        set title       = #{title,jdbcType=VARCHAR},
+            summary     = #{summary,jdbcType=VARCHAR},
+            cover_img   = #{coverImg,jdbcType=VARCHAR},
+            view_num    = #{viewNum,jdbcType=INTEGER},
+            price       = #{price,jdbcType=INTEGER},
+            create_time = #{createTime,jdbcType=TIMESTAMP},
+            `online`    = #{online,jdbcType=INTEGER},
+            point       = #{point,jdbcType=DOUBLE}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 
-  <select id="selectAll" resultMap="BaseResultMap">
-    SELECT <include refid="Base_Column_List"/>
-    FROM video
-  </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM video
+    </select>
+
+
+    <!--<resultMap id="VideoDetailsResultMap" type="video">
+      <id column="vid" property="id" jdbcType="INTEGER"/>
+      <result column="title" property="title" jdbcType="VARCHAR"/>
+      <result column="v_summary" property="summary" jdbcType="VARCHAR"/>
+      <result column="v_cover_img" property="coverImg" jdbcType="VARCHAR"/>
+      <result column="view_num" property="viewNum" jdbcType="INTEGER"/>
+      <result column="price" property="price" jdbcType="INTEGER"/>
+      <result column="v_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+      <result column="online" property="online" jdbcType="INTEGER"/>
+      <result column="point" property="point" jdbcType="DOUBLE"/>
+      <collection property="chapterList" ofType="chapter">
+        <id column="c_id" property="id" jdbcType="INTEGER"/>
+        <result column="c_title" property="title" jdbcType="VARCHAR"/>
+        <result column="ordered" property="ordered" jdbcType="INTEGER"/>
+        <result column="c_video_id" property="videoId" jdbcType="INTEGER"/>
+        <result column="c_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <collection property="episodeList" ofType="episode">
+          <id column="e_id" property="id" jdbcType="INTEGER"/>
+          <result column="e_title" property="title" jdbcType="VARCHAR"/>
+          <result column="num" property="num" jdbcType="INTEGER"/>
+          <result column="duration" property="duration" jdbcType="VARCHAR"/>
+          <result column="e_cover_img" property="coverImg" jdbcType="VARCHAR"/>
+          <result column="e_video_id" property="videoId" jdbcType="INTEGER"/>
+          <result column="e_summary" property="summary" jdbcType="VARCHAR"/>
+          <result column="e_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+          <result column="chapter_id" property="chapterId" jdbcType="INTEGER"/>
+        </collection>
+      </collection>
+    </resultMap>-->
+
+    <resultMap id="videoDetailsResultMap" type="cn.codewoo.entity.Video">
+        <id column="v_id" property="id" jdbcType="INTEGER"/>
+        <result column="v_title" property="title" jdbcType="VARCHAR"/>
+        <result column="v_summary" property="summary" jdbcType="VARCHAR"/>
+        <result column="v_cover_img" property="coverImg" jdbcType="VARCHAR"/>
+        <result column="view_num" property="viewNum" jdbcType="INTEGER"/>
+        <result column="price" property="price" jdbcType="INTEGER"/>
+        <result column="v_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="online" property="online" jdbcType="INTEGER"/>
+        <result column="point" property="point" jdbcType="DOUBLE"/>
+        <collection property="chapterList" javaType="list" ofType="cn.codewoo.entity.Chapter">
+            <id column="c_id" property="id" jdbcType="INTEGER"/>
+            <result column="c_title" property="title" jdbcType="VARCHAR"/>
+            <result column="ordered" property="ordered" jdbcType="INTEGER"/>
+            <result column="c_video_id" property="videoId" jdbcType="INTEGER"/>
+            <result column="c_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+            <collection property="episodeList" javaType="list" ofType="cn.codewoo.entity.Episode">
+                <id column="e_id" property="id" jdbcType="INTEGER"/>
+                <result column="e_title" property="title" jdbcType="VARCHAR"/>
+                <result column="num" property="num" jdbcType="INTEGER"/>
+                <result column="duration" property="duration" jdbcType="VARCHAR"/>
+                <result column="e_cover_img" property="coverImg" jdbcType="VARCHAR"/>
+                <result column="e_video_id" property="videoId" jdbcType="INTEGER"/>
+                <result column="e_summary" property="summary" jdbcType="VARCHAR"/>
+                <result column="e_create_time" property="createTime" jdbcType="TIMESTAMP"/>
+                <result column="chapter_id" property="chapterId" jdbcType="VARCHAR"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+
+    <resultMap id="selectVideoDetailResultMap" type="video">
+        <id column="v_id" jdbcType="INTEGER" property="id"/>
+        <result column="v_title" jdbcType="VARCHAR" property="title"/>
+        <result column="v_summary" jdbcType="VARCHAR" property="summary"/>
+        <result column="v_cover_img" jdbcType="VARCHAR" property="coverImg"/>
+        <result column="price" jdbcType="INTEGER" property="price"/>
+        <result column="point" jdbcType="DOUBLE" property="point"/>
+        <result column="view_num" jdbcType="INTEGER" property="viewNum"/>
+        <result column="v_createTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="online" jdbcType="INTEGER" property="online"/>
+        <collection property="chapterList" ofType="chapter">
+            <id column="c_id" jdbcType="INTEGER" property="id"/>
+            <result column="c_title" jdbcType="VARCHAR" property="title"/>
+            <result column="ordered" jdbcType="INTEGER" property="ordered"/>
+            <result column="c_video_id" jdbcType="INTEGER" property="videoId"/>
+            <result column="c_createTime" jdbcType="TIMESTAMP" property="createTime"/>
+            <collection property="episodeList" ofType="episode">
+                <id column="e_id" jdbcType="INTEGER" property="id"/>
+                <result column="e_video_id" jdbcType="INTEGER" property="videoId"/>
+                <result column="e_create_time" jdbcType="TIMESTAMP" property="createTime"/>
+                <result column="e_title" jdbcType="VARCHAR" property="title"/>
+                <result column="chapter_id" jdbcType="INTEGER" property="chapterId"/>
+                <result column="num" jdbcType="INTEGER" property="num"/>
+
+                <!--        e_summary等字段未添加？-->
+
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="selectVideoDetailsById" resultMap="videoDetailsResultMap" parameterType="int">
+        select v.id          as v_id,
+               v.title       as v_title,
+               v.summary     as v_summary,
+               v.cover_img   as v_cover_img,
+               v.view_num,
+               v.price,
+               v.create_time as v_create_time,
+               v.`online`,
+               v.point,
+               c.id          as c_id,
+               c.title       as c_title,
+               c.ordered,
+               c.video_id    as c_video_id,
+               c.create_time as c_create_time,
+               e.id          as e_id,
+               e.title       as e_title,
+               e.num,
+               e.duration,
+               e.cover_img   as e_cover_img,
+               e.video_id    as e_video_id,
+               e.summary     as e_summary,
+               e.create_time as e_create_time,
+               e.chapter_id
+        from video as v
+
+                 LEFT JOIN chapter as c on (v.id = c.video_id)
+                 LEFT JOIN episode e on (c.id = e.chapter_id)
+
+        where v.id = #{videoId}
+        order by c.ordered, e.num;
+    </select>
+
+
 </mapper>

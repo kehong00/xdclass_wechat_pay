@@ -14,6 +14,7 @@ import cn.codewoo.utils.BaseRespCode;
 import cn.codewoo.utils.CommonUtils;
 import cn.codewoo.utils.HttpClientUtils;
 import cn.codewoo.utils.VXPayUtils;
+import cn.codewoo.vo.req.AlipayPayReqVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * @ClassName VideoOrderServiceImpl
@@ -115,38 +114,52 @@ public class VideoOrderServiceImpl implements IVideoOrderService {
     }
 
     @Override
-    public int saveAlipay(OrderSaveDTO dto) {
+    public AlipayPayReqVO saveAlipay(int videoId, int userId) throws UnsupportedEncodingException {
+
         //查询用户购买的视频
-        Video video = videoMapper.selectByPrimaryKey(dto.getVideoId());
+        Video video = videoMapper.selectByPrimaryKey(videoId);
         if (video == null){
-            return -1;
+            return null;
         }
 
         //查询用户信息
-        User user = userMapper.selectByPrimaryKey(dto.getUserId());
+        User user = userMapper.selectByPrimaryKey(userId);
         if (user == null){
-            return -1;
+            return null;
         }
 
-        //Mock数据，订单信息
+        //查询用户是否有该类型的订单，如果有需要支付或删除订单'
+        VideoOrder videoOrder = orderMapper.selectOrderByUserIdAndVideoId(userId, videoId);
+        if (videoOrder != null){
+            throw new CustomException(BaseRespCode.ORDER_OUT_TRADE_NO_EXISTS);
 
-        VideoOrder videoOrder = new VideoOrder();
-        videoOrder.setOutTradeNo(dto.getOutTradeNo());
-        videoOrder.setTotalFee(video.getPrice());
-        videoOrder.setVideoImg(video.getCoverImg());
-        videoOrder.setVideoTitle(video.getTitle());
-        videoOrder.setCreateTime(new Date());
-        videoOrder.setVideoId(video.getId());
-        videoOrder.setState(0);
+        }
 
-        videoOrder.setUserId(user.getId());
-        videoOrder.setHeadImg(user.getHeadImg());
-        videoOrder.setNickname(user.getName());
-        videoOrder.setIp(dto.getIp());
+        VideoOrder dto = new VideoOrder();
+        dto.setOpenid(user.getOpenid());
+        dto.setOutTradeNo(generateOutTradeNo("1001"));
+        dto.setState(0);
+        dto.setCreateTime(new Date());
+        dto.setTotalFee(video.getPrice());
+        dto.setNickname(user.getName());
+        dto.setHeadImg(user.getHeadImg());
+        dto.setVideoId(video.getId());
+        dto.setVideoTitle(video.getTitle());
+        dto.setVideoImg(video.getCoverImg());
+        dto.setUserId(user.getId());
+        dto.setIp("42.194.140.230");
 
-        int rows = orderMapper.insertSelective(videoOrder);
-        return rows;
+
+        AlipayPayReqVO alipayPayReqVO = generateAlipayPayReqVO(dto);
+
+
+        orderMapper.insertSelective(dto);
+
+        return alipayPayReqVO;
+
     }
+
+
 
     @Override
     public int update(VideoOrder order) {
@@ -158,6 +171,33 @@ public class VideoOrderServiceImpl implements IVideoOrderService {
     public VideoOrder selectOrderByOutTradeNo(String outTradeNo) {
         VideoOrder videoOrder = orderMapper.selectOrderByOutTradeNo(outTradeNo);
         return videoOrder;
+    }
+
+    @Override
+    public List<VideoOrder> selectOrderByUserId(int userId) {
+        return orderMapper.selectOrderByUserId(userId);
+    }
+
+    @Override
+    public VideoOrder selectOrderByUserIdAndVideoId(int userId, int videoId) {
+        return orderMapper.selectOrderByUserIdAndVideoId(userId,videoId);
+    }
+
+    @Override
+    public AlipayPayReqVO generateAlipayPayReqVO(VideoOrder videoOrder) {
+        AlipayPayReqVO alipayPayReqVO = new AlipayPayReqVO();
+        alipayPayReqVO.setSubject("test");
+        alipayPayReqVO.setBody("test");
+        alipayPayReqVO.setProduct_code("FAST_INSTANT_TRADE_PAY");
+        alipayPayReqVO.setOut_trade_no(videoOrder.getOutTradeNo());
+        alipayPayReqVO.setTotal_amount((double)videoOrder.getTotalFee() / 100);
+        return alipayPayReqVO;
+    }
+
+
+    @Override
+    public VideoOrder selectOrderStateByUserIdAndVideoId(int userId, int videoId) {
+        return orderMapper.selectOrderByUserIdAndVideoId(userId,videoId);
     }
 
 

@@ -50,6 +50,8 @@ public class ShiroConfig {
         filtersMap.put("token",new CustomTokenAccessFilter());
         shiroFilterFactoryBean.setFilters(filtersMap);
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
+        filterChainDefinitionMap.put("/**", "anon");
+
         // 配置不会被拦截的链接 顺序判断
         filterChainDefinitionMap.put("/api/pub/**", "anon");
         filterChainDefinitionMap.put("/index/**","anon");

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 视频实体类
@@ -29,6 +30,12 @@ public class Video implements Serializable {
     private Integer online;
     @ApiModelProperty("评分")
     private Double point;
+
+    @ApiModelProperty("视频章节信息")
+    private List<Chapter> chapterList;
+
+
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -120,5 +127,13 @@ public class Video implements Serializable {
                 ", online=" + online +
                 ", point=" + point +
                 '}';
+    }
+
+    public List<Chapter> getChapterList() {
+        return chapterList;
+    }
+
+    public void setChapterList(List<Chapter> chapterList) {
+        this.chapterList = chapterList;
     }
 }

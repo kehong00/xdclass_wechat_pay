@@ -257,7 +257,7 @@
         del = #{del,jdbcType=INTEGER},
       </if>
     </set>
-    where out_trade_no = #{outTradeNo, jdbcType=INTEGER} and del != 0
+    where out_trade_no = #{outTradeNo, jdbcType=INTEGER} and del != 1
   </update>
 
 
@@ -265,6 +265,25 @@
     select <include refid="Base_Column_List"/>
     from video_order
     where out_trade_no = #{outTradeNo} and del != 1
+  </select>
+
+  <select id="selectOrderByUserId" parameterType="int" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from video_order
+    where user_id = #{userId} and del != 1;
+  </select>
+
+
+  <select id="selectOrderByUserIdAndVideoId" parameterType="int" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from video_order
+    where user_id = #{userId} and video_id = #{videoId} and del != 1
+  </select>
+
+  <select id="selectOrderStateByUserIdAndVideoId" parameterType="int" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from video_order
+    where user_id = #{userId} and video_id = #{videoId} and state = 1 and del != 1;
   </select>
 
 

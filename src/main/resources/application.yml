@@ -24,12 +24,13 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
+  type-aliases-package: cn.codewoo.entity
 wxpay:
   appid: wxu43ykka27h78m2ig
   appsecret: p3336mt274i0z0i85050i85c286p8847
   mer_id: 4606516237
   key: 985I3X1uh6588n21Y1JZg03t0p18MV28
-  callback: http://kt86j7.natappfree.cc/api/pub/wechat/order/callback
+  callback: http://ndxcbs.natappfree.cc/api/pub/wechat/order/callback
 
 wxopen:
   appid: wxu43ykka27h78m2ig
@@ -45,7 +46,11 @@ alipay:
   appPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm4pDngpCTKYB2zazr0v7HdT5sMrizXttUbKcf9JooxjiwnKehYe8OawByWxPeItCzxBjVnFixhOPseN7LM2zw41U2coxLNIFLl8vGHQ6siRAeTrujiu4fgd6EsBhdrJKKlCRNDFzM7m7obNZp2cEeqJXaNfv+5crXbzo8n3/O4hosiGVysAvO9Zy903ARqNp1zA8trkXA18VIXfC+327Uxpbl36cZgjtSX+RhO/kMyVmuRfEY6oLetmKRgJkHdVv0QkEpOEdfmhF7yg3N6eEbb1/evUv8oCa6YHXbhkCEmp54/IJTmhwKNiKl9mCzt6klhvhEGxXmJPd0Uy+oZ8YKQIDAQAB
   alipayPublicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhPTHo+1OY/xCDIGvyVKQkQsPXt+FDe2BJ6RWUxV9bYC5xH9JQgxAJXNWgzxCwPWraidF797b9Kc3jDaKf+yEb90mAkGqq9YK/NEprctiqNjUL09RvTIpmLbYpMYHA8en8b7/BJ+96tMrgW4wC3Mo4bYybX9CHxtqE4lVWDIXtGJ7jeEsFPIpVuN7BgQKIrPHZZikntfcWQLgNbBHAscNKA5Igf8mEQffKbL1KU7YdqUKof2RUyvDs5D+xmLoDlmBmLcBiTktu0dLc5r8FEjEX8spTE2GB/NgeBwwsfbPCZdKGKrsXyAQaV/k4HTReKAjK5KE9xdbwAcxpDFnDdGaRwIDAQAB
   qrurl: https://openauth.alipaydev.com/oauth2/publicAppAuthorize.htm?app_id=%s&scope=auth_user&redirect_uri=%s
-  redirect_url: http://localhost:8081/api/pub/user_callback
+  redirect_url: http://localhost:8081/api/pub/alipay/user_callback
+  # 支付宝支付异步通知地址
+  notify_url: http://ndxcbs.natappfree.cc/api/pub/alipay/notify_callback
+  # 支付宝支付后同步回调接口
+  pay_return_url: http://localhost:9003/#/query_trade_state
 server:
   port: 8081
 jwt:

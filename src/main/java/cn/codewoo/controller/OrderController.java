@@ -1,9 +1,12 @@
 package cn.codewoo.controller;
 
+import cn.codewoo.constant.Constants;
 import cn.codewoo.dto.OrderSaveDTO;
+import cn.codewoo.entity.VideoOrder;
 import cn.codewoo.service.IVideoOrderService;
 import cn.codewoo.utils.DataResult;
 import cn.codewoo.utils.IpUtils;
+import cn.codewoo.utils.jwt.JwtUtils;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -11,6 +14,8 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import io.jsonwebtoken.Claims;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,7 +43,7 @@ import java.util.Map;
 public class OrderController {
     @Autowired
     private IVideoOrderService videoOrderService;
-    @GetMapping("/add")
+    @GetMapping("/auth/wechat/pay")
     public DataResult saveOrder(@RequestParam(value = "video_id",required = true) Integer videoId,
                                 HttpServletRequest request, HttpServletResponse response) {
         String ipAddr = IpUtils.getIpAddr(request);
@@ -73,4 +79,25 @@ public class OrderController {
 
         return DataResult.success();
     }
+
+    @GetMapping("/auth/orders")
+    @ApiOperation("获取用户订单")
+    public DataResult getOrderByUserId(HttpServletRequest request){
+        String token = request.getHeader(Constants.AUTHENTICATION);
+        Claims claims = JwtUtils.checkJWT(token);
+        int userId = (int) claims.get("id");
+        List<VideoOrder> videoOrders = videoOrderService.selectOrderByUserId(userId);
+        return DataResult.success(videoOrders);
+    }
+
+    @GetMapping("/auth/order/query_order_state")
+    @ApiOperation("查询用户是否已经购买该视频")
+    public DataResult queryOrderState(HttpServletRequest request, @RequestParam(value = "video_id") Integer videoId){
+        String token = request.getHeader(Constants.AUTHENTICATION);
+        Claims claims = JwtUtils.checkJWT(token);
+        int id = (int) claims.get("id");
+        VideoOrder videoOrder = videoOrderService.selectOrderStateByUserIdAndVideoId(id, videoId);
+        return DataResult.success(videoOrder != null);
+    }
+
 }

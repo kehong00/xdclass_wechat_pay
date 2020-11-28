@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -21,6 +22,9 @@ public class Chapter implements Serializable {
     private Integer ordered;
     @ApiModelProperty("创建时间")
     private Date createTime;
+
+    @ApiModelProperty("章节中的集信息")
+    private List<Episode> episodeList;
 
     private static final long serialVersionUID = 1L;
 
@@ -99,5 +103,13 @@ public class Chapter implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, videoId, title, ordered, createTime);
+    }
+
+    public List<Episode> getEpisodeList() {
+        return episodeList;
+    }
+
+    public void setEpisodeList(List<Episode> episodeList) {
+        this.episodeList = episodeList;
     }
 }
