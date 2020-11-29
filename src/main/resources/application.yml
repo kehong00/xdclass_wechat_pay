@@ -30,7 +30,7 @@ wxpay:
   appsecret: p3336mt274i0z0i85050i85c286p8847
   mer_id: 4606516237
   key: 985I3X1uh6588n21Y1JZg03t0p18MV28
-  callback: http://ndxcbs.natappfree.cc/api/pub/wechat/order/callback
+  callback: http://gimcty.natappfree.cc/api/pub/wechat/order/callback
 
 wxopen:
   appid: wxu43ykka27h78m2ig
@@ -48,7 +48,7 @@ alipay:
   qrurl: https://openauth.alipaydev.com/oauth2/publicAppAuthorize.htm?app_id=%s&scope=auth_user&redirect_uri=%s
   redirect_url: http://localhost:8081/api/pub/alipay/user_callback
   # 支付宝支付异步通知地址
-  notify_url: http://ndxcbs.natappfree.cc/api/pub/alipay/notify_callback
+  notify_url: http://gimcty.natappfree.cc/api/pub/alipay/notify_callback
   # 支付宝支付后同步回调接口
   pay_return_url: http://localhost:9003/#/query_trade_state
 server:

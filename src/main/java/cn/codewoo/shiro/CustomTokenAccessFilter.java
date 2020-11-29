@@ -3,6 +3,7 @@ package cn.codewoo.shiro;
 import cn.codewoo.constant.Constants;
 import cn.codewoo.exception.CustomException;
 import cn.codewoo.utils.BaseRespCode;
+import cn.codewoo.utils.CommonUtils;
 import cn.codewoo.utils.DataResult;
 import cn.codewoo.utils.jwt.JwtUtils;
 import com.alibaba.fastjson.JSON;
@@ -45,7 +46,8 @@ public class CustomTokenAccessFilter extends AccessControlFilter {
             while (headerNames.hasMoreElements()){
                 log.info(request.getHeader(headerNames.nextElement()));
             }
-            String token = request.getHeader(Constants.AUTHENTICATION);
+//            String token = request.getHeader(Constants.AUTHENTICATION);
+            String token = CommonUtils.getToken(request);
             if (Strings.isEmpty(token)){
                 throw new CustomException(BaseRespCode.TOKEN_NOT_NULL);
             }

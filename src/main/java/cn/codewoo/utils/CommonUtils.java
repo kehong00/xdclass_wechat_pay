@@ -1,5 +1,8 @@
 package cn.codewoo.utils;
 
+import cn.codewoo.constant.Constants;
+
+import javax.servlet.http.HttpServletRequest;
 import java.security.MessageDigest;
 import java.util.UUID;
 
@@ -36,6 +39,23 @@ public class CommonUtils {
         }
         return null;
 
+    }
+
+
+    /**
+     * 获取请求中的token
+     * @param request
+     * @return
+     */
+    public static String getToken(HttpServletRequest request){
+        //先从header中获取
+        String token = request.getHeader(Constants.AUTHENTICATION);
+        //如果header中没有
+        if (token.isEmpty()){
+            //从参数中获取
+            token = request.getParameter(Constants.AUTHENTICATION);
+        }
+        return token;
     }
 
 

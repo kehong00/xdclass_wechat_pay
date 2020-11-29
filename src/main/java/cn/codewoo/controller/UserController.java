@@ -6,6 +6,7 @@ import cn.codewoo.entity.User;
 import cn.codewoo.exception.CustomException;
 import cn.codewoo.mapper.UserMapper;
 import cn.codewoo.utils.BaseRespCode;
+import cn.codewoo.utils.CommonUtils;
 import cn.codewoo.utils.DataResult;
 import cn.codewoo.utils.jwt.JwtUtils;
 import io.swagger.annotations.Api;
@@ -48,7 +49,8 @@ public class UserController {
 
     @GetMapping("/auth/userinfo")
     public DataResult getUserInfo(HttpServletRequest request){
-        String token = request.getHeader(Constants.AUTHENTICATION);
+//        String token = request.getHeader(Constants.AUTHENTICATION);
+        String token = CommonUtils.getToken(request);
         if (Strings.isEmpty(token)){
             throw new CustomException(BaseRespCode.TOKEN_NOT_NULL);
         }
